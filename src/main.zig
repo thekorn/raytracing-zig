@@ -1,7 +1,7 @@
 const std = @import("std");
 
-const vec3 = @import("vec3");
-const color = @import("color");
+const vec3 = @import("vec3.zig");
+const color = @import("color.zig");
 
 const Vec3 = vec3.Vec3;
 

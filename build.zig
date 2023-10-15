@@ -24,16 +24,6 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
-    const vec3_module = b.createModule(.{
-        .source_file = .{ .path = "src/vec3.zig" },
-    });
-    exe.addModule("vec3", vec3_module);
-
-    const color_module = b.createModule(.{
-        .source_file = .{ .path = "src/color.zig" },
-    });
-    exe.addModule("color", color_module);
-
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
