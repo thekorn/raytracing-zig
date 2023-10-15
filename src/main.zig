@@ -1,7 +1,7 @@
 const std = @import("std");
 
 const vec3 = @import("vec3.zig");
-const ray = @import("ray.zig");
+const ray = @import("entities/ray.zig");
 const image = @import("image.zig");
 
 const Vec3 = vec3.Vec3;
