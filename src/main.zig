@@ -2,12 +2,19 @@ const std = @import("std");
 
 const vec3 = @import("vec3.zig");
 const ray = @import("entities/ray.zig");
+const hittable = @import("entities/hittable.zig");
 const image = @import("image.zig");
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;
+const Hittable = hittable.Hittable;
 
 pub fn main() !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    var arena = std.heap.ArenaAllocator.init(gpa.allocator());
+    defer arena.deinit();
+    var allocator = arena.allocator();
+
     // Image
 
     const aspect_ratio = 16.0 / 9.0;
@@ -21,6 +28,14 @@ pub fn main() !void {
     var img = try image.makePPMImageFile("out.ppm", image_width, image_height);
     //var img = try image.makePPMImageStdOut(image_height, image_width);
     defer img.deinit();
+
+    // World
+
+    var world = Hittable.hittable_list(allocator);
+    defer world.deinit();
+
+    try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5));
+    try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100));
 
     // Camera
 
@@ -50,7 +65,7 @@ pub fn main() !void {
             const ray_direction = pixel_center.sub(camera_center);
 
             const r = Ray.init(camera_center, ray_direction);
-            const pixel_color = r.color();
+            const pixel_color = r.color(&world);
 
             img.write_color(pixel_color);
         }

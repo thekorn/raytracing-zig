@@ -1,6 +1,6 @@
 const vec3 = @import("../vec3.zig");
 const ray = @import("ray.zig");
-const hitable = @import("hitable.zig");
+const hitable = @import("hittable.zig");
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;

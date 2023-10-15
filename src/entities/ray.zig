@@ -1,8 +1,11 @@
-const vec3 = @import("../vec3.zig");
+const std = @import("std");
 
-const sphere = @import("sphere.zig");
+const vec3 = @import("../vec3.zig");
+const hittable = @import("hittable.zig");
 
 const Vec3 = vec3.Vec3;
+const HitRecord = hittable.HitRecord;
+const Hittable = hittable.Hittable;
 
 pub const Ray = struct {
     origin: Vec3,
@@ -18,11 +21,10 @@ pub const Ray = struct {
         return self.origin.add(self.direction.scalar(t));
     }
 
-    pub fn color(self: Self) Vec3 {
-        const t = sphere.hit_sphere(Vec3.init(0.0, 0.0, -1.0), 0.5, self);
-        if (t > 0.0) {
-            const N = self.at(t).sub(Vec3.init(0.0, 0.0, -1.0)).unit_vector();
-            return Vec3.init(N.x + 1.0, N.y + 1.0, N.z + 1.0).scalar(0.5);
+    pub fn color(self: Self, world: *Hittable) Vec3 {
+        var rec: HitRecord = undefined;
+        if (world.hit(self, 0.0, std.math.inf(f32), &rec)) {
+            return rec.normal.add(Vec3.init(1.0, 1.0, 1.0)).scalar(0.5);
         }
 
         const unit_direction = self.direction.unit_vector();
