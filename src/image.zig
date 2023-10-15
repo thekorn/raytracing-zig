@@ -6,14 +6,18 @@ const Vec3 = vec3.Vec3;
 
 pub const PPMImage = struct {
     buffered_writer: std.io.BufferedWriter(4096, std.fs.File.Writer),
+    out_fd: std.fs.File,
 
-    pub fn init(writer: anytype) PPMImage {
+    pub fn init(fd: std.fs.File) PPMImage {
+        const writer = fd.writer();
+
         var bw = std.io.bufferedWriter(writer);
-        return .{ .buffered_writer = bw };
+        return .{ .buffered_writer = bw, .out_fd = fd };
     }
 
     pub fn deinit(self: *PPMImage) void {
         self.buffered_writer.flush() catch {};
+        self.out_fd.close();
     }
 
     fn println(self: *PPMImage, comptime format: []const u8, args: anytype) !void {
@@ -38,3 +42,17 @@ pub const PPMImage = struct {
         self.write_pixel(r, g, b);
     }
 };
+
+pub fn makePPMImageFile(filename: []const u8, width: usize, height: usize) !PPMImage {
+    const fd = try std.fs.cwd().createFile(filename, .{ .read = true });
+    var ppm = PPMImage.init(fd);
+    ppm.write_header(width, height);
+    return ppm;
+}
+
+pub fn makePPMImageStdOut(width: usize, height: usize) !PPMImage {
+    const fd = std.io.getStdOut();
+    var ppm = PPMImage.init(fd);
+    ppm.write_header(width, height);
+    return ppm;
+}

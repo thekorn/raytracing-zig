@@ -6,25 +6,8 @@ const image = @import("image.zig");
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;
-const PPMImage = image.PPMImage;
 
 pub fn main() !void {
-    //const out = PPMImageFile.init("out.ppm");
-    //defer out.close();
-    const my_file = try std.fs.cwd().createFile("zig.ppm", .{ .read = true });
-    defer my_file.close();
-    const w = my_file.writer();
-
-    // stdout is for the actual output of your application, for example if you
-    // are implementing gzip, then only the compressed bytes should be sent to
-    // stdout, not any debugging messages.
-    //const stdout_file = std.io.getStdOut().writer();
-    //var bw = std.io.bufferedWriter(stdout_file);
-    //const stdout = bw.writer();
-
-    var img = PPMImage.init(w);
-    defer img.deinit();
-
     // Image
 
     const aspect_ratio = 16.0 / 9.0;
@@ -34,6 +17,10 @@ pub fn main() !void {
 
     var image_height = @as(usize, @intFromFloat(@as(f32, image_width) / aspect_ratio));
     if (image_height < 1) image_height = 1;
+
+    var img = try image.makePPMImageFile("out.ppm", image_width, image_height);
+    //var img = try image.makePPMImageStdOut(image_height, image_width);
+    defer img.deinit();
 
     // Camera
 
@@ -53,8 +40,6 @@ pub fn main() !void {
     // Calculate the location of the upper left pixel.
     const viewport_upper_left = camera_center.sub(viewport_u.scalar(1.0 / 2.0)).add(viewport_v.scalar(1.0 / 2.0)).sub(Vec3.init(0, 0, focal_length));
     const pixel00_loc = viewport_upper_left.add(pixel_delta_u.scalar(1.0 / 2.0)).sub(pixel_delta_v.scalar(1.0 / 2.0));
-
-    img.write_header(image_width, image_height);
 
     for (0..image_height) |a| {
         const y = image_height - a - 1;
