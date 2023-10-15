@@ -9,6 +9,10 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 $ zig build run && open out.ppm
 ```
 
+## Current rendering
+
+![curret rendering](./current.png)
+
 ## References
  
  * https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
