@@ -15,7 +15,7 @@ pub const Vec3 = struct {
     const Self = @This();
 
     pub fn init(x: f32, y: f32, z: f32) Self {
-        return Vec3{
+        return .{
             .x = x,
             .y = y,
             .z = z,
@@ -23,7 +23,7 @@ pub const Vec3 = struct {
     }
 
     pub fn scalar(self: Self, s: f32) Self {
-        return Vec3{
+        return .{
             .x = self.x * s,
             .y = self.y * s,
             .z = self.z * s,
@@ -36,7 +36,7 @@ pub const Vec3 = struct {
     }
 
     pub fn add(self: Self, other: Vec3) Self {
-        return Vec3{
+        return .{
             .x = self.x + other.x,
             .y = self.y + other.y,
             .z = self.z + other.z,
@@ -52,7 +52,7 @@ pub const Vec3 = struct {
     }
 
     pub fn mul(self: Self, other: Vec3) Self {
-        return Vec3{
+        return .{
             .x = self.x * other.x,
             .y = self.y * other.y,
             .z = self.z * other.z,
@@ -60,7 +60,7 @@ pub const Vec3 = struct {
     }
 
     pub fn cross(self: Self, other: Vec3) Self {
-        return Vec3{
+        return .{
             .x = self.y * other.z - self.z * other.y,
             .y = self.z * other.x - self.x * other.z,
             .z = self.x * other.y - self.y * other.x,

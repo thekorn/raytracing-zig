@@ -13,7 +13,7 @@ pub const HitRecord = struct {
     const Self = @This();
 
     pub fn init(p: Vec3, normal: Vec3, t: f32) Self {
-        return HitRecord{ .p = p, .normal = normal, .t = t };
+        return .{ .p = p, .normal = normal, .t = t };
     }
 
     pub fn set_face_normal(self: *Self, r: *Ray, outward_normal: Vec3) void {

@@ -11,7 +11,7 @@ pub const Ray = struct {
     const Self = @This();
 
     pub fn init(origin: Vec3, direction: Vec3) Self {
-        return Ray{ .origin = origin, .direction = direction };
+        return .{ .origin = origin, .direction = direction };
     }
 
     pub fn at(self: Self, t: f32) Vec3 {
