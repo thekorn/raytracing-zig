@@ -6,5 +6,10 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 ## render the scene
 
 ```bash
-$ zig build run
+$ zig build run && open out.ppm
 ```
+
+## References
+ 
+ * https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
+ * https://github.com/jpaquim/raytracing-zig
