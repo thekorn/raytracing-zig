@@ -3,17 +3,30 @@ const std = @import("std");
 const vec3 = @import("vec3.zig");
 const color = @import("color.zig");
 const ray = @import("ray.zig");
+const image = @import("image.zig");
+
+//const fmt = std.fmt;
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;
+const PPMImage = image.PPMImage;
 
 pub fn main() !void {
+    //const out = PPMImageFile.init("out.ppm");
+    //defer out.close();
+    const my_file = try std.fs.cwd().createFile("zig.ppm", .{ .read = true });
+    defer my_file.close();
+    const w = my_file.writer();
+
     // stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to
     // stdout, not any debugging messages.
-    const stdout_file = std.io.getStdOut().writer();
-    var bw = std.io.bufferedWriter(stdout_file);
-    const stdout = bw.writer();
+    //const stdout_file = std.io.getStdOut().writer();
+    //var bw = std.io.bufferedWriter(stdout_file);
+    //const stdout = bw.writer();
+
+    var img = PPMImage.init(w);
+    defer img.deinit();
 
     // Image
 
@@ -44,7 +57,7 @@ pub fn main() !void {
     const viewport_upper_left = camera_center.sub(viewport_u.scalar(1.0 / 2.0)).add(viewport_v.scalar(1.0 / 2.0)).sub(Vec3.init(0, 0, focal_length));
     const pixel00_loc = viewport_upper_left.add(pixel_delta_u.scalar(1.0 / 2.0)).sub(pixel_delta_v.scalar(1.0 / 2.0));
 
-    try stdout.print("P3\n{d} {d}\n255\n", .{ image_width, image_height });
+    img.write_header(image_width, image_height);
 
     for (0..image_height) |a| {
         const y = image_height - a - 1;
@@ -57,9 +70,7 @@ pub fn main() !void {
             const r = Ray.init(camera_center, ray_direction);
             const pixel_color = r.color();
 
-            try color.write_color(stdout, pixel_color);
+            img.write_color(pixel_color);
         }
     }
-
-    try bw.flush();
 }
