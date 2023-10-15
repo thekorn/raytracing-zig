@@ -1,11 +1,8 @@
 const std = @import("std");
 
 const vec3 = @import("vec3.zig");
-const color = @import("color.zig");
 const ray = @import("ray.zig");
 const image = @import("image.zig");
-
-//const fmt = std.fmt;
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;
