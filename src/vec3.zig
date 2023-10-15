@@ -4,7 +4,7 @@ const fmt = std.fmt;
 const expect = @import("std").testing.expect;
 
 pub fn debug_vec3(v: Vec3) void {
-    std.debug.print("Vec3(x={d}, y={d}, z={d})", .{ v.x, v.y, v.z });
+    std.debug.print("Vec3(x={d}, y={d}, z={d})\n", .{ v.x, v.y, v.z });
 }
 
 pub const Vec3 = struct {
