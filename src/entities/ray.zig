@@ -13,12 +13,14 @@ pub const Ray = struct {
     }
 
     pub fn at(self: Ray, t: f32) Vec3 {
-        return self.origin.add(self.direction.scale(t));
+        return self.origin.add(self.direction.scalar(t));
     }
 
     pub fn color(self: Ray) Vec3 {
-        if (sphere.hit_sphere(Vec3.init(0.0, 0.0, -1.0), 0.5, self)) {
-            return Vec3.init(1.0, 0.0, 0.0);
+        const t = sphere.hit_sphere(Vec3.init(0.0, 0.0, -1.0), 0.5, self);
+        if (t > 0.0) {
+            const N = self.at(t).sub(Vec3.init(0.0, 0.0, -1.0)).unit_vector();
+            return Vec3.init(N.x + 1.0, N.y + 1.0, N.z + 1.0).scalar(0.5);
         }
 
         const unit_direction = self.direction.unit_vector();
