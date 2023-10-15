@@ -10,11 +10,13 @@ pub const Sphere = struct {
     center: Vec3,
     radius: f32,
 
-    pub fn init(center: Vec3, radius: f32) Sphere {
+    const Self = @This();
+
+    pub fn init(center: Vec3, radius: f32) Self {
         return .{ .center = center, .radius = radius };
     }
 
-    pub fn hit(self: *Sphere, r: Ray, t_min: f32, t_max: f32, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, t_min: f32, t_max: f32, rec: *HitRecord) bool {
         const oc = r.origin.sub(self.center);
         const a = r.direction.length_squared();
         const half_b = oc.dot(r.direction);

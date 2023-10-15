@@ -10,11 +10,13 @@ pub const HitRecord = struct {
     t: f32,
     front_face: bool = false,
 
-    pub fn init(p: Vec3, normal: Vec3, t: f32) HitRecord {
+    const Self = @This();
+
+    pub fn init(p: Vec3, normal: Vec3, t: f32) Self {
         return HitRecord{ .p = p, .normal = normal, .t = t };
     }
 
-    pub fn set_face_normal(self: *HitRecord, r: *Ray, outward_normal: Vec3) void {
+    pub fn set_face_normal(self: *Self, r: *Ray, outward_normal: Vec3) void {
         // Sets the hit record normal vector.
         // NOTE: the parameter `outward_normal` is assumed to have unit length.
 

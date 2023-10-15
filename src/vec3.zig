@@ -12,7 +12,9 @@ pub const Vec3 = struct {
     y: f32,
     z: f32,
 
-    pub fn init(x: f32, y: f32, z: f32) Vec3 {
+    const Self = @This();
+
+    pub fn init(x: f32, y: f32, z: f32) Self {
         return Vec3{
             .x = x,
             .y = y,
@@ -20,7 +22,7 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn scalar(self: Vec3, s: f32) Vec3 {
+    pub fn scalar(self: Self, s: f32) Self {
         return Vec3{
             .x = self.x * s,
             .y = self.y * s,
@@ -28,12 +30,12 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn div(self: Vec3, x: f32) Vec3 {
+    pub fn div(self: Self, x: f32) Self {
         const y = 1.0 / x;
         return self.scalar(y);
     }
 
-    pub fn add(self: Vec3, other: Vec3) Vec3 {
+    pub fn add(self: Self, other: Vec3) Self {
         return Vec3{
             .x = self.x + other.x,
             .y = self.y + other.y,
@@ -41,15 +43,15 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn sub(self: Vec3, other: Vec3) Vec3 {
+    pub fn sub(self: Self, other: Vec3) Self {
         return self.add(other.scalar(-1.0));
     }
 
-    pub fn dot(self: Vec3, other: Vec3) f32 {
+    pub fn dot(self: Self, other: Vec3) f32 {
         return self.x * other.x + self.y * other.y + self.z * other.z;
     }
 
-    pub fn mul(self: Vec3, other: Vec3) Vec3 {
+    pub fn mul(self: Self, other: Vec3) Self {
         return Vec3{
             .x = self.x * other.x,
             .y = self.y * other.y,
@@ -57,7 +59,7 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn cross(self: Vec3, other: Vec3) Vec3 {
+    pub fn cross(self: Self, other: Vec3) Self {
         return Vec3{
             .x = self.y * other.z - self.z * other.y,
             .y = self.z * other.x - self.x * other.z,
@@ -65,23 +67,23 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn length(self: Vec3) f32 {
+    pub fn length(self: Self) f32 {
         return @sqrt(self.length_squared());
     }
 
-    pub fn length_squared(self: Vec3) f32 {
+    pub fn length_squared(self: Self) f32 {
         return self.dot(self);
     }
 
-    pub fn unit_vector(self: Vec3) Vec3 {
+    pub fn unit_vector(self: Self) Self {
         return self.div(self.length());
     }
 
-    pub fn is_equal(self: Vec3, other: Vec3) bool {
+    pub fn is_equal(self: Self, other: Vec3) bool {
         return self.x == other.x and self.y == other.y and self.z == other.z;
     }
 
-    pub fn to_string(self: Vec3) []const u8 {
+    pub fn to_string(self: Self) []const u8 {
         _ = self;
         //var all_together: []u8 = undefined;
         //var start: usize = 0;

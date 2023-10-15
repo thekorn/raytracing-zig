@@ -8,33 +8,35 @@ pub const PPMImage = struct {
     buffered_writer: std.io.BufferedWriter(4096, std.fs.File.Writer),
     out_fd: std.fs.File,
 
-    pub fn init(fd: std.fs.File) PPMImage {
+    const Self = @This();
+
+    pub fn init(fd: std.fs.File) Self {
         const writer = fd.writer();
 
         var bw = std.io.bufferedWriter(writer);
         return .{ .buffered_writer = bw, .out_fd = fd };
     }
 
-    pub fn deinit(self: *PPMImage) void {
+    pub fn deinit(self: *Self) void {
         self.buffered_writer.flush() catch {};
         self.out_fd.close();
     }
 
-    fn println(self: *PPMImage, comptime format: []const u8, args: anytype) !void {
+    fn println(self: *Self, comptime format: []const u8, args: anytype) !void {
         self.buffered_writer.writer().print(format ++ "\n", args) catch {};
     }
 
-    pub fn write_header(self: *PPMImage, width: usize, height: usize) void {
+    pub fn write_header(self: *Self, width: usize, height: usize) void {
         self.println("P3", .{}) catch {};
         self.println("{d} {d}", .{ width, height }) catch {};
         self.println("255", .{}) catch {};
     }
 
-    fn write_pixel(self: *PPMImage, r: usize, g: usize, b: usize) void {
+    fn write_pixel(self: *Self, r: usize, g: usize, b: usize) void {
         self.println("{d} {d} {d}", .{ r, g, b }) catch {};
     }
 
-    pub fn write_color(self: *PPMImage, c: Vec3) void {
+    pub fn write_color(self: *Self, c: Vec3) void {
         const normColor = c.scalar(255);
         const r = @as(usize, @intFromFloat(normColor.x));
         const g = @as(usize, @intFromFloat(normColor.y));

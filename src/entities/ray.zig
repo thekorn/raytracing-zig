@@ -8,15 +8,17 @@ pub const Ray = struct {
     origin: Vec3,
     direction: Vec3,
 
-    pub fn init(origin: Vec3, direction: Vec3) Ray {
+    const Self = @This();
+
+    pub fn init(origin: Vec3, direction: Vec3) Self {
         return Ray{ .origin = origin, .direction = direction };
     }
 
-    pub fn at(self: Ray, t: f32) Vec3 {
+    pub fn at(self: Self, t: f32) Vec3 {
         return self.origin.add(self.direction.scalar(t));
     }
 
-    pub fn color(self: Ray) Vec3 {
+    pub fn color(self: Self) Vec3 {
         const t = sphere.hit_sphere(Vec3.init(0.0, 0.0, -1.0), 0.5, self);
         if (t > 0.0) {
             const N = self.at(t).sub(Vec3.init(0.0, 0.0, -1.0)).unit_vector();
