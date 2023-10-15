@@ -1,5 +1,10 @@
 const std = @import("std");
 
+const vec3 = @import("vec3");
+const color = @import("color");
+
+const Vec3 = vec3.Vec3;
+
 pub fn main() !void {
     // stdout is for the actual output of your application, for example if you
     // are implementing gzip, then only the compressed bytes should be sent to
@@ -16,14 +21,13 @@ pub fn main() !void {
     for (0..image_height) |j| {
         std.debug.print("\rScanlines remaining: {d} ", .{image_height - j});
         for (0..image_width) |i| {
-            const r = @as(f32, @floatFromInt(i)) / (image_width - 1);
-            const g = @as(f32, @floatFromInt(j)) / (image_height - 1);
-            const b = 0;
-            try stdout.print("{d} {d} {d}\n", .{
-                @as(usize, @intFromFloat(256 * r)),
-                @as(usize, @intFromFloat(256 * g)),
-                @as(usize, @intFromFloat(256 * b)),
-            });
+            const pixel_color = Vec3.init(
+                @as(f32, @floatFromInt(i)) / (image_width - 1),
+                @as(f32, @floatFromInt(j)) / (image_height - 1),
+                0,
+            );
+
+            try color.write_color(stdout, pixel_color);
         }
     }
     std.debug.print("\rDone.                  \n", .{});

@@ -24,6 +24,16 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
 
+    const vec3_module = b.createModule(.{
+        .source_file = .{ .path = "src/vec3.zig" },
+    });
+    exe.addModule("vec3", vec3_module);
+
+    const color_module = b.createModule(.{
+        .source_file = .{ .path = "src/color.zig" },
+    });
+    exe.addModule("color", color_module);
+
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default
     // step when running `zig build`).
@@ -62,9 +72,18 @@ pub fn build(b: *std.Build) void {
 
     const run_unit_tests = b.addRunArtifact(unit_tests);
 
+    const vec3_unit_tests = b.addTest(.{
+        .root_source_file = .{ .path = "src/vec3.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const run_vec3_unit_tests = b.addRunArtifact(vec3_unit_tests);
+
     // Similar to creating the run step earlier, this exposes a `test` step to
     // the `zig build --help` menu, providing a way for the user to request
     // running the unit tests.
     const test_step = b.step("test", "Run unit tests");
     test_step.dependOn(&run_unit_tests.step);
+    test_step.dependOn(&run_vec3_unit_tests.step);
 }
