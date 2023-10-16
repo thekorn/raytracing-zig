@@ -18,7 +18,7 @@ pub fn main() !void {
     // Image
 
     const aspect_ratio = 16.0 / 9.0;
-    const image_width = 384;
+    const image_width = 400;
 
     // Calculate the image height, and ensure that it's at least 1.
 
