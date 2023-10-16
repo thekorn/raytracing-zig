@@ -45,16 +45,18 @@ pub const PPMImage = struct {
     }
 };
 
-pub fn makePPMImageFile(filename: []const u8, width: usize, height: usize) !PPMImage {
-    const fd = try std.fs.cwd().createFile(filename, .{ .read = true });
+fn makePPMImage(fd: std.fs.File, width: usize, height: usize) !PPMImage {
     var ppm = PPMImage.init(fd);
     ppm.write_header(width, height);
     return ppm;
 }
 
+pub fn makePPMImageFile(filename: []const u8, width: usize, height: usize) !PPMImage {
+    const fd = try std.fs.cwd().createFile(filename, .{ .read = true });
+    return makePPMImage(fd, width, height);
+}
+
 pub fn makePPMImageStdOut(width: usize, height: usize) !PPMImage {
     const fd = std.io.getStdOut();
-    var ppm = PPMImage.init(fd);
-    ppm.write_header(width, height);
-    return ppm;
+    return makePPMImage(fd, width, height);
 }
