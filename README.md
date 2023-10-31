@@ -9,6 +9,12 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 $ zig build run && open out.ppm
 ```
 
+## convert the result to png
+
+```bash
+$ docker run -v $(pwd):/imgs dpokidov/imagemagick /imgs/out.ppm /imgs/current.png
+```
+
 ## build options
 
 ```bash
