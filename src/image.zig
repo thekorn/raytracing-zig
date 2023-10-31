@@ -10,6 +10,9 @@ pub const PPMImage = struct {
 
     const Self = @This();
 
+    /// Initializes a new PPMImage instance.
+    /// @param fd: The file descriptor to write the image data to.
+    /// @return: A new PPMImage instance.
     pub fn init(fd: std.fs.File) Self {
         const writer = fd.writer();
 
@@ -17,6 +20,9 @@ pub const PPMImage = struct {
         return .{ .buffered_writer = bw, .out_fd = fd };
     }
 
+    /// Cleans up a PPMImage instance.
+    /// This function flushes any remaining data in the buffered writer and closes the file descriptor.
+    /// @param self: The PPMImage instance to clean up.
     pub fn deinit(self: *Self) void {
         self.buffered_writer.flush() catch {};
         self.out_fd.close();
@@ -26,6 +32,11 @@ pub const PPMImage = struct {
         self.buffered_writer.writer().print(format ++ "\n", args) catch {};
     }
 
+    /// Writes the header of a PPM image file to the output stream.
+    /// The header contains the magic number "P3", the width and height of the image, and the maximum color value (255).
+    /// @param self: The PPMImage instance to write the header to.
+    /// @param width: The width of the image.
+    /// @param height: The height of the image.
     pub fn write_header(self: *Self, width: usize, height: usize) void {
         self.println("P3", .{}) catch {};
         self.println("{d} {d}", .{ width, height }) catch {};
@@ -36,6 +47,11 @@ pub const PPMImage = struct {
         self.println("{d} {d} {d}", .{ r, g, b }) catch {};
     }
 
+    /// Writes a color to the PPM image file.
+    /// The color is represented as a Vec3, with each component being a floating-point value between 0 and 1.
+    /// These values are scaled to the range 0-255 and converted to integers to write to the file.
+    /// @param self: The PPMImage instance to write the color to.
+    /// @param c: The color to write, represented as a Vec3.
     pub fn write_color(self: *Self, c: Vec3) void {
         const normColor = c.scalar(255);
         const r = @as(usize, @intFromFloat(normColor.x));
@@ -45,18 +61,56 @@ pub const PPMImage = struct {
     }
 };
 
+/// Creates a new PPMImage and writes the header to it.
+/// @param fd: The file descriptor to write the image data to.
+/// @param width: The width of the image.
+/// @param height: The height of the image.
+/// @return: A new PPMImage instance with the header already written.
 fn makePPMImage(fd: std.fs.File, width: usize, height: usize) !PPMImage {
     var ppm = PPMImage.init(fd);
     ppm.write_header(width, height);
     return ppm;
 }
 
+/// Creates a new PPMImage file.
+/// This function initializes a new PPMImage instance, writes the header to it, and returns the instance.
+/// @param filename: The name of the file to create.
+/// @param width: The width of the image.
+/// @param height: The height of the image.
+/// @return: A new PPMImage instance with the header already written.
 pub fn makePPMImageFile(filename: []const u8, width: usize, height: usize) !PPMImage {
     const fd = try std.fs.cwd().createFile(filename, .{ .read = true });
     return makePPMImage(fd, width, height);
 }
 
+/// Creates a new PPMImage and writes the header to the standard output.
+/// This function initializes a new PPMImage instance, writes the header to it, and returns the instance.
+/// @param width: The width of the image.
+/// @param height: The height of the image.
+/// @return: A new PPMImage instance with the header already written to the standard output.
 pub fn makePPMImageStdOut(width: usize, height: usize) !PPMImage {
     const fd = std.io.getStdOut();
     return makePPMImage(fd, width, height);
+}
+
+test "makePPMImageFile creates a file with the correct dimensions" {
+    const filename = "test.ppm";
+    const width = 100;
+    const height = 50;
+
+    defer std.fs.removeFile(filename);
+
+    const img = try makePPMImageFile(filename, width, height);
+
+    defer img.deinit();
+
+    const file = try std.fs.cwd().openFile(filename, .{ .read = false, .write = true, .create = false });
+
+    const expectedHeader = std.fmt.allocPrint("P3\n{} {}\n255\n", .{ width, height });
+    defer std.fmt.free(expectedHeader);
+
+    const actualHeader = try file.readLineAlloc(std.heap.page_allocator);
+    defer std.mem.free(actualHeader);
+
+    std.testing.expectEqualStrings(expectedHeader, actualHeader);
 }
