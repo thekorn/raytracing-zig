@@ -34,9 +34,9 @@ pub fn main() !void {
     defer world.deinit();
 
     var material_ground = Material.lambertian(Vec3.init(0.8, 0.8, 0.0));
-    var material_center = Material.dielectric(1.5);
+    var material_center = Material.lambertian(Vec3.init(0.1, 0.2, 0.5));
     var material_left = Material.dielectric(1.5);
-    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2), 1.0);
+    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2), 0);
 
     try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100, &material_ground));
     try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5, &material_center));

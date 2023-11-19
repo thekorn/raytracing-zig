@@ -59,9 +59,20 @@ pub const Dielectric = struct {
         const refraction_ratio = if (rec.front_face) 1.0 / self.ir else self.ir;
 
         const unit_direction = r_in.direction.unit_vector();
-        const refracted = unit_direction.refract(rec.normal, refraction_ratio);
 
-        scattered.* = Ray.init(rec.p, refracted);
+        const cos_theta = @min(unit_direction.scalar(-1).dot(rec.normal), 1.0);
+        const sin_theta = @sqrt(1.0 - cos_theta * cos_theta);
+
+        const cannot_refract = refraction_ratio * sin_theta > 1.0;
+        var direction: Vec3 = undefined;
+
+        if (cannot_refract) {
+            direction = unit_direction.reflect(rec.normal);
+        } else {
+            direction = unit_direction.refract(rec.normal, refraction_ratio);
+        }
+
+        scattered.* = Ray.init(rec.p, direction);
         return true;
     }
 };
