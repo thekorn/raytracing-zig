@@ -7,12 +7,12 @@ const rtweekend = @import("rtweekend.zig");
 const Infinity = rtweekend.Infinity;
 
 pub const Interval = struct {
-    min: f32,
-    max: f32,
+    min: f64,
+    max: f64,
 
     const Self = @This();
 
-    pub fn init(min: f32, max: f32) Self {
+    pub fn init(min: f64, max: f64) Self {
         return .{ .min = min, .max = max };
     }
 
@@ -20,15 +20,15 @@ pub const Interval = struct {
         return .{ .min = -Infinity, .max = Infinity };
     }
 
-    pub fn contains(self: *Self, value: f32) bool {
+    pub fn contains(self: *Self, value: f64) bool {
         return self.min <= value and value <= self.max;
     }
 
-    pub fn surrounds(self: *Self, value: f32) bool {
+    pub fn surrounds(self: *Self, value: f64) bool {
         return self.min < value and value < self.max;
     }
 
-    pub fn clamp(self: *Self, value: f32) f32 {
+    pub fn clamp(self: *Self, value: f64) f64 {
         return math.clamp(value, self.min, self.max);
     }
 };

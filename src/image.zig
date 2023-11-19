@@ -54,9 +54,9 @@ pub const PPMImage = struct {
     /// @param self: The PPMImage instance to write the color to.
     /// @param c: The color to write, represented as a Vec3.
     pub fn write_color(self: *Self, c: Vec3, samples_per_pixel: usize) void {
-        var r = c.x;
-        var g = c.y;
-        var b = c.z;
+        var r = c.x();
+        var g = c.y();
+        var b = c.z();
 
         const scale = 1.0 / @as(f32, @floatFromInt(samples_per_pixel));
         r *= scale;

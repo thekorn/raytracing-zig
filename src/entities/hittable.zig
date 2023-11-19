@@ -14,7 +14,7 @@ const HittableList = hittableList.HittableList;
 pub const HitRecord = struct {
     p: Vec3,
     normal: Vec3,
-    t: f32,
+    t: f64,
     front_face: bool = false,
 
     const Self = @This();

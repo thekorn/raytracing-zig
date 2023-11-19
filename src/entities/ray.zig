@@ -19,7 +19,7 @@ pub const Ray = struct {
         return .{ .origin = origin, .direction = direction };
     }
 
-    pub fn at(self: Self, t: f32) Vec3 {
+    pub fn at(self: Self, t: f64) Vec3 {
         return self.origin.add(self.direction.scalar(t));
     }
 
@@ -31,7 +31,7 @@ pub const Ray = struct {
         }
 
         const unit_direction = self.direction.unit_vector();
-        const a = 0.5 * (unit_direction.y + 1.0);
+        const a = 0.5 * (unit_direction.y() + 1.0);
         return (Vec3.init(1.0, 1.0, 1.0)
             .scalar(1.0 - a))
             .add((Vec3.init(0.5, 0.7, 1.0).scalar(a)));
