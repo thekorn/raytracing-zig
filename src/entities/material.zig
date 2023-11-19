@@ -31,17 +31,18 @@ pub const Lambertian = struct {
 
 pub const Metal = struct {
     albedo: Vec3,
+    fuzz: f32,
     const Self = @This();
 
-    pub fn init(albedo: Vec3) Self {
-        return .{ .albedo = albedo };
+    pub fn init(albedo: Vec3, f: f32) Self {
+        return .{ .albedo = albedo, .fuzz = if (f < 1.0) f else 1.0 };
     }
 
     pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
         const reflected = r_in.direction.unit_vector().reflect(rec.normal);
-        scattered.* = Ray.init(rec.p, reflected);
+        scattered.* = Ray.init(rec.p, reflected.add(random_unit_vector().scalar(self.fuzz)));
         attenuation.* = self.albedo;
-        return true;
+        return scattered.direction.dot(rec.normal) > 0.0;
     }
 };
 
@@ -61,7 +62,7 @@ pub const Material = union(enum) {
         return Self{ .Lambertian = Lambertian.init(color) };
     }
 
-    pub fn metal(color: Vec3) Self {
-        return Self{ .Metal = Metal.init(color) };
+    pub fn metal(color: Vec3, fuzz: f32) Self {
+        return Self{ .Metal = Metal.init(color, fuzz) };
     }
 };
