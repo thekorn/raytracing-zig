@@ -34,8 +34,8 @@ $ zig build -Doptimize=ReleaseSmall
 $ hyperfine -N --warmup 3 './zig-out/bin/raytracing-zig'
 
 Benchmark 1: ./zig-out/bin/raytracing-zig
-  Time (mean ± σ):      55.7 ms ±   0.5 ms    [User: 48.3 ms, System: 7.1 ms]
-  Range (min … max):    54.9 ms …  57.1 ms    53 runs
+  Time (mean ± σ):     151.5 ms ±   3.4 ms    [User: 147.4 ms, System: 1.9 ms]
+  Range (min … max):   149.4 ms … 163.4 ms    20 runs
 ```
 
 ## Current rendering
