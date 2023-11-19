@@ -25,7 +25,8 @@ pub const Ray = struct {
 
     pub fn color(self: Self, world: *Hittable) Vec3 {
         var rec: HitRecord = undefined;
-        if (world.hit(self, Interval.init(0, Infinity), &rec)) {
+        var i = Interval.init(0, Infinity);
+        if (world.hit(self, &i, &rec)) {
             return rec.normal.add(Vec3.init(1.0, 1.0, 1.0)).scalar(0.5);
         }
 

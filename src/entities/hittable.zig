@@ -38,7 +38,7 @@ pub const Hittable = union(enum) {
 
     const Self = @This();
 
-    pub fn hit(self: *Self, r: Ray, ray_t: Interval, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, ray_t: *Interval, rec: *HitRecord) bool {
         return switch (self.*) {
             .Sphere => |*s| s.hit(r, ray_t, rec),
             .HittableList => |*l| l.hit(r, ray_t, rec),

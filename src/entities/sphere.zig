@@ -17,7 +17,7 @@ pub const Sphere = struct {
         return .{ .center = center, .radius = radius };
     }
 
-    pub fn hit(self: *Self, r: Ray, ray_t: Interval, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, ray_t: *Interval, rec: *HitRecord) bool {
         const oc = r.origin.sub(self.center);
         const a = r.direction.length_squared();
         const half_b = oc.dot(r.direction);

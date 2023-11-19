@@ -27,13 +27,14 @@ pub const HittableList = struct {
         return self;
     }
 
-    pub fn hit(self: *Self, r: Ray, ray_t: Interval, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, ray_t: *Interval, rec: *HitRecord) bool {
         var temp_rec: HitRecord = undefined;
         var hit_anything: bool = false;
         var closest_so_far = ray_t.max;
 
         for (self.objects.items) |*object| {
-            if (object.hit(r, Interval.init(ray_t.min, closest_so_far), &temp_rec)) {
+            var i = Interval.init(ray_t.min, closest_so_far);
+            if (object.hit(r, &i, &temp_rec)) {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
                 rec.* = temp_rec;
