@@ -1,6 +1,8 @@
 const std = @import("std");
 const rtweekend = @import("../rtweekend.zig");
 
+const math = std.math;
+
 const Ray = @import("ray.zig").Ray;
 const hittable = @import("hittable.zig");
 const image = @import("../image.zig");
@@ -9,6 +11,7 @@ const Interval = @import("../interval.zig").Interval;
 const Infinity = rtweekend.Infinity;
 const RandGen = rtweekend.RandGen;
 const getRandomInRange = rtweekend.getRandomInRange;
+const degress_to_radians = rtweekend.degress_to_radians;
 
 const HitRecord = hittable.HitRecord;
 const Hittable = hittable.Hittable;
@@ -27,16 +30,19 @@ pub const Camera = struct {
     pixel_delta_v: Vec3,
     samples_per_pixel: usize,
     max_depth: usize,
+    vfov: f32,
 
     const Self = @This();
 
-    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize, max_depth: usize) Self {
+    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize, max_depth: usize, vfov: f32) Self {
         const aspect_ratio = @as(f32, @floatFromInt(image_width)) / @as(f32, @floatFromInt(image_height));
 
         const center = Vec3.init(0, 0, 0);
 
         const focal_length = 1.0;
-        const viewport_height = 2.0;
+        const theta = degress_to_radians(vfov);
+        const h = math.tan(theta / 2.0);
+        const viewport_height = 2.0 * h * focal_length;
         const viewport_width = aspect_ratio * viewport_height;
 
         const viewport_u = Vec3.init(viewport_width, 0, 0);
@@ -57,6 +63,7 @@ pub const Camera = struct {
             .pixel_delta_v = pixel_delta_v,
             .samples_per_pixel = samples_per_pixel,
             .max_depth = max_depth,
+            .vfov = vfov,
         };
     }
 
