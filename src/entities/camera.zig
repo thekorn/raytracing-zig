@@ -26,10 +26,11 @@ pub const Camera = struct {
     pixel_delta_u: Vec3,
     pixel_delta_v: Vec3,
     samples_per_pixel: usize,
+    max_depth: usize,
 
     const Self = @This();
 
-    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize) Self {
+    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize, max_depth: usize) Self {
         const aspect_ratio = @as(f32, @floatFromInt(image_width)) / @as(f32, @floatFromInt(image_height));
 
         const center = Vec3.init(0, 0, 0);
@@ -55,6 +56,7 @@ pub const Camera = struct {
             .pixel_delta_u = pixel_delta_u,
             .pixel_delta_v = pixel_delta_v,
             .samples_per_pixel = samples_per_pixel,
+            .max_depth = max_depth,
         };
     }
 
@@ -65,7 +67,7 @@ pub const Camera = struct {
                 var pixel_color = Vec3.init(0, 0, 0);
                 for (0..self.samples_per_pixel) |_| {
                     var r = self.get_ray(x, y);
-                    pixel_color = pixel_color.add(r.color(world));
+                    pixel_color = pixel_color.add(r.color(self.max_depth, world));
                 }
 
                 img.write_color(pixel_color, self.samples_per_pixel);

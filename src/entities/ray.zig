@@ -24,14 +24,20 @@ pub const Ray = struct {
         return self.origin.add(self.direction.scalar(t));
     }
 
-    pub fn color(self: *Self, world: *Hittable) Vec3 {
+    pub fn color(self: *Self, depth: usize, world: *Hittable) Vec3 {
         var rec: HitRecord = undefined;
-        var i = Interval.init(0, Infinity);
+
+        // if we've exceeded the ray bounce limit, no more light is gathered.
+        if (depth <= 0) {
+            return Vec3.init(0.0, 0.0, 0.0);
+        }
+
+        var i = Interval.init(0.001, Infinity);
 
         if (world.hit(self.*, &i, &rec)) {
             var direction = random_on_hemisphere(&rec.normal);
             var r = Ray.init(rec.p, direction);
-            return r.color(world).scalar(0.5);
+            return r.color(depth - 1, world).scalar(0.5);
         }
 
         const unit_direction = self.direction.unit_vector();
