@@ -9,6 +9,12 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 $ zig build run && open out.ppm
 ```
 
+## unit testing
+
+```bash
+$ zig build test --summary all
+```
+
 ## convert the result to png
 
 ```bash
