@@ -5,6 +5,7 @@ const ray = @import("entities/ray.zig");
 const Camera = @import("entities/camera.zig").Camera;
 const hittable = @import("entities/hittable.zig");
 const image = @import("image.zig");
+const Material = @import("entities/material.zig").Material;
 
 const Vec3 = vec3.Vec3;
 const Ray = ray.Ray;
@@ -32,8 +33,15 @@ pub fn main() !void {
     var world = Hittable.hittable_list(allocator);
     defer world.deinit();
 
-    try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5));
-    try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100));
+    var material_ground = Material.lambertian(Vec3.init(0.8, 0.8, 0.0));
+    var material_center = Material.lambertian(Vec3.init(0.7, 0.3, 0.3));
+    var material_left = Material.metal(Vec3.init(0.8, 0.8, 0.8));
+    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2));
+
+    try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100, &material_ground));
+    try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5, &material_center));
+    try world.add(Hittable.sphere(Vec3.init(-1, 0, -1), 0.5, &material_left));
+    try world.add(Hittable.sphere(Vec3.init(1, 0, -1), 0.5, &material_right));
 
     // Camera
     var cam = Camera.init(image_width, image_height, 100, 50);

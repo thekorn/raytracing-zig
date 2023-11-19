@@ -15,7 +15,7 @@ const HittableList = hittableList.HittableList;
 pub const HitRecord = struct {
     p: Vec3,
     normal: Vec3,
-    mat: ?*Material = null,
+    mat: Material,
     t: f32,
     front_face: bool = false,
 
@@ -61,8 +61,8 @@ pub const Hittable = union(enum) {
         };
     }
 
-    pub fn sphere(center: Vec3, radius: f32) Self {
-        return Self{ .Sphere = Sphere.init(center, radius, null) };
+    pub fn sphere(center: Vec3, radius: f32, meterial: *Material) Self {
+        return Self{ .Sphere = Sphere.init(center, radius, meterial) };
     }
 
     pub fn hittable_list(allocator: std.mem.Allocator) Self {

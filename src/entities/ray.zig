@@ -36,9 +36,13 @@ pub const Ray = struct {
         var i = Interval.init(0.001, Infinity);
 
         if (world.hit(self.*, &i, &rec)) {
-            var direction = rec.normal.add(random_unit_vector());
-            var r = Ray.init(rec.p, direction);
-            return r.color(depth - 1, world).scalar(0.5);
+            var scattered: Ray = undefined;
+            var attenuation: Vec3 = undefined;
+
+            if (rec.mat.scatter(self, &rec, &attenuation, &scattered)) {
+                return attenuation.mul(scattered.color(depth - 1, world));
+            }
+            return Vec3.init(0.0, 0.0, 0.0);
         }
 
         const unit_direction = self.direction.unit_vector();

@@ -83,6 +83,10 @@ pub const Vec3 = struct {
         return self.dot(self);
     }
 
+    pub fn reflect(self: Self, normal: Vec3) Self {
+        return self.sub(normal.scalar(2.0 * self.dot(normal)));
+    }
+
     pub fn near_zero(self: *Self) bool {
         // return true if the vector is close to zero in all dimensions.
         const s = 1e-8;

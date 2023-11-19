@@ -11,11 +11,11 @@ const HitRecord = hitable.HitRecord;
 pub const Sphere = struct {
     center: Vec3,
     radius: f32,
-    mat: ?*Material = null,
+    mat: *Material,
 
     const Self = @This();
 
-    pub fn init(center: Vec3, radius: f32, material: ?*Material) Self {
+    pub fn init(center: Vec3, radius: f32, material: *Material) Self {
         return .{ .center = center, .radius = radius, .mat = material };
     }
 
@@ -45,7 +45,7 @@ pub const Sphere = struct {
         rec.p = r.at(rec.t);
         const outward_normal = (rec.p.sub(self.center)).div(self.radius);
         rec.set_face_normal(r, outward_normal);
-        rec.mat = self.mat;
+        rec.mat = self.mat.*;
         return true;
     }
 };
