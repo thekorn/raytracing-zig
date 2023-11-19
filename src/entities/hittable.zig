@@ -1,6 +1,7 @@
 const std = @import("std");
 
 const vec3 = @import("../vec3.zig");
+const Interval = @import("../interval.zig").Interval;
 const ray = @import("ray.zig");
 const sphere = @import("sphere.zig");
 const hittableList = @import("hittableList.zig");
@@ -37,10 +38,10 @@ pub const Hittable = union(enum) {
 
     const Self = @This();
 
-    pub fn hit(self: *Self, r: Ray, t_min: f32, t_max: f32, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, ray_t: Interval, rec: *HitRecord) bool {
         return switch (self.*) {
-            .Sphere => |*s| s.hit(r, t_min, t_max, rec),
-            .HittableList => |*l| l.hit(r, t_min, t_max, rec),
+            .Sphere => |*s| s.hit(r, ray_t, rec),
+            .HittableList => |*l| l.hit(r, ray_t, rec),
         };
     }
 

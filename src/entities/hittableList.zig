@@ -3,6 +3,7 @@ const ArrayList = std.ArrayList;
 
 const hittable = @import("hittable.zig");
 const ray = @import("ray.zig");
+const Interval = @import("../interval.zig").Interval;
 
 const Hittable = hittable.Hittable;
 const HitRecord = hittable.HitRecord;
@@ -26,13 +27,13 @@ pub const HittableList = struct {
         return self;
     }
 
-    pub fn hit(self: *Self, r: Ray, t_min: f32, t_max: f32, rec: *HitRecord) bool {
+    pub fn hit(self: *Self, r: Ray, ray_t: Interval, rec: *HitRecord) bool {
         var temp_rec: HitRecord = undefined;
         var hit_anything: bool = false;
-        var closest_so_far = t_max;
+        var closest_so_far = ray_t.max;
 
         for (self.objects.items) |*object| {
-            if (object.hit(r, t_min, closest_so_far, &temp_rec)) {
+            if (object.hit(r, Interval.init(ray_t.min, closest_so_far), &temp_rec)) {
                 hit_anything = true;
                 closest_so_far = temp_rec.t;
                 rec.* = temp_rec;

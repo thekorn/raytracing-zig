@@ -1,6 +1,8 @@
 const std = @import("std");
 
 const vec3 = @import("../vec3.zig");
+const Interval = @import("../interval.zig").Interval;
+const Infinity = @import("../rtweekend.zig").Infinity;
 const hittable = @import("hittable.zig");
 
 const Vec3 = vec3.Vec3;
@@ -23,7 +25,7 @@ pub const Ray = struct {
 
     pub fn color(self: Self, world: *Hittable) Vec3 {
         var rec: HitRecord = undefined;
-        if (world.hit(self, 0.0, std.math.inf(f32), &rec)) {
+        if (world.hit(self, Interval.init(0, Infinity), &rec)) {
             return rec.normal.add(Vec3.init(1.0, 1.0, 1.0)).scalar(0.5);
         }
 
