@@ -6,7 +6,7 @@ const pi = math.pi;
 
 pub const RandGen = std.rand.DefaultPrng;
 
-pub const Infinity = std.math.floatMax(f64);
+pub const Infinity = std.math.floatMax(f32);
 
 pub fn getRandom(rnd: *RandGen, comptime T: type) T {
     return switch (@typeInfo(T)) {

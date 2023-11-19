@@ -36,6 +36,6 @@ pub fn main() !void {
     try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100));
 
     // Camera
-    var cam = Camera.init(image_width, image_height);
+    var cam = Camera.init(image_width, image_height, 100);
     cam.render(&img, &world);
 }

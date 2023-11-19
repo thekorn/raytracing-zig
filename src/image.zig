@@ -1,6 +1,7 @@
 const std = @import("std");
 
 const vec3 = @import("vec3.zig");
+const Interval = @import("interval.zig").Interval;
 
 const Vec3 = vec3.Vec3;
 
@@ -52,12 +53,23 @@ pub const PPMImage = struct {
     /// These values are scaled to the range 0-255 and converted to integers to write to the file.
     /// @param self: The PPMImage instance to write the color to.
     /// @param c: The color to write, represented as a Vec3.
-    pub fn write_color(self: *Self, c: Vec3) void {
-        const normColor = c.scalar(255);
-        const r = @as(usize, @intFromFloat(normColor.x));
-        const g = @as(usize, @intFromFloat(normColor.y));
-        const b = @as(usize, @intFromFloat(normColor.z));
-        self.write_pixel(r, g, b);
+    pub fn write_color(self: *Self, c: Vec3, samples_per_pixel: usize) void {
+        var r = c.x;
+        var g = c.y;
+        var b = c.z;
+
+        const scale = 1.0 / @as(f32, @floatFromInt(samples_per_pixel));
+        r *= scale;
+        g *= scale;
+        b *= scale;
+
+        var intensity = Interval.init(0, 0.999);
+
+        self.write_pixel(
+            @as(usize, @intFromFloat(255.0 * intensity.clamp(r))),
+            @as(usize, @intFromFloat(255.0 * intensity.clamp(g))),
+            @as(usize, @intFromFloat(255.0 * intensity.clamp(b))),
+        );
     }
 };
 
