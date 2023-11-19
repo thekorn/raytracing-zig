@@ -40,7 +40,7 @@ pub fn main() !void {
 
     try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100, &material_ground));
     try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5, &material_center));
-    try world.add(Hittable.sphere(Vec3.init(-1, 0, -1), 0.5, &material_left));
+    try world.add(Hittable.sphere(Vec3.init(-1, 0, -1), -0.4, &material_left));
     try world.add(Hittable.sphere(Vec3.init(1, 0, -1), 0.5, &material_right));
 
     // Camera

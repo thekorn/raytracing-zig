@@ -1,11 +1,16 @@
+const math = @import("std").math;
 const vec3 = @import("../vec3.zig");
 const hittable = @import("hittable.zig");
 const ray = @import("ray.zig");
+const rtweekend = @import("../rtweekend.zig");
 
 const Vec3 = vec3.Vec3;
 const random_unit_vector = vec3.random_unit_vector;
 const Ray = ray.Ray;
 const HitRecord = hittable.HitRecord;
+const getRandom = rtweekend.getRandom;
+
+var rnd = rtweekend.RandGen.init(0);
 
 pub const Lambertian = struct {
     albedo: Vec3,
@@ -66,7 +71,7 @@ pub const Dielectric = struct {
         const cannot_refract = refraction_ratio * sin_theta > 1.0;
         var direction: Vec3 = undefined;
 
-        if (cannot_refract) {
+        if (cannot_refract or Self.reflectance(cos_theta, refraction_ratio) > getRandom(&rnd, f32)) {
             direction = unit_direction.reflect(rec.normal);
         } else {
             direction = unit_direction.refract(rec.normal, refraction_ratio);
@@ -74,6 +79,13 @@ pub const Dielectric = struct {
 
         scattered.* = Ray.init(rec.p, direction);
         return true;
+    }
+
+    fn reflectance(cosine: f32, ref_idx: f32) f32 {
+        // use Schlick's approximation for reflectance
+        var r0 = (1 - ref_idx) / (1 + ref_idx);
+        r0 = r0 * r0;
+        return r0 + (1 - r0) * math.pow(f32, (1 - cosine), 5);
     }
 };
 
