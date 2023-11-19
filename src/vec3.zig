@@ -87,6 +87,13 @@ pub const Vec3 = struct {
         return self.sub(normal.scalar(2.0 * self.dot(normal)));
     }
 
+    pub fn refract(self: Self, normal: Vec3, etai_over_etat: f32) Self {
+        const cos_theta = @min(self.scalar(-1.0).dot(normal), 1.0);
+        const r_out_perp = self.add(normal.scalar(cos_theta)).scalar(etai_over_etat);
+        const r_out_parallel = normal.scalar(-@sqrt(@fabs(1.0 - r_out_perp.length_squared())));
+        return r_out_perp.add(r_out_parallel);
+    }
+
     pub fn near_zero(self: *Self) bool {
         // return true if the vector is close to zero in all dimensions.
         const s = 1e-8;

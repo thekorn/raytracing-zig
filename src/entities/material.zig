@@ -46,15 +46,37 @@ pub const Metal = struct {
     }
 };
 
+pub const Dielectric = struct {
+    ir: f32,
+    const Self = @This();
+
+    pub fn init(index_of_refraction: f32) Self {
+        return .{ .ir = index_of_refraction };
+    }
+
+    pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
+        attenuation.* = Vec3.init(1.0, 1.0, 1.0);
+        const refraction_ratio = if (rec.front_face) 1.0 / self.ir else self.ir;
+
+        const unit_direction = r_in.direction.unit_vector();
+        const refracted = unit_direction.refract(rec.normal, refraction_ratio);
+
+        scattered.* = Ray.init(rec.p, refracted);
+        return true;
+    }
+};
+
 pub const Material = union(enum) {
     Lambertian: Lambertian,
     Metal: Metal,
+    Dielectric: Dielectric,
     const Self = @This();
 
     pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
         return switch (self.*) {
             .Lambertian => |*m| m.scatter(r_in, rec, attenuation, scattered),
             .Metal => |*m| m.scatter(r_in, rec, attenuation, scattered),
+            .Dielectric => |*d| d.scatter(r_in, rec, attenuation, scattered),
         };
     }
 
@@ -64,5 +86,9 @@ pub const Material = union(enum) {
 
     pub fn metal(color: Vec3, fuzz: f32) Self {
         return Self{ .Metal = Metal.init(color, fuzz) };
+    }
+
+    pub fn dielectric(index_of_refraction: f32) Self {
+        return Self{ .Dielectric = Dielectric.init(index_of_refraction) };
     }
 };
