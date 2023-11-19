@@ -7,6 +7,7 @@ const hittable = @import("hittable.zig");
 
 const Vec3 = vec3.Vec3;
 const random_on_hemisphere = vec3.random_on_hemisphere;
+const random_unit_vector = vec3.random_unit_vector;
 const HitRecord = hittable.HitRecord;
 const Hittable = hittable.Hittable;
 
@@ -35,7 +36,7 @@ pub const Ray = struct {
         var i = Interval.init(0.001, Infinity);
 
         if (world.hit(self.*, &i, &rec)) {
-            var direction = random_on_hemisphere(&rec.normal);
+            var direction = rec.normal.add(random_unit_vector());
             var r = Ray.init(rec.p, direction);
             return r.color(depth - 1, world).scalar(0.5);
         }
