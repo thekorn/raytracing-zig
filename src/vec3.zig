@@ -1,7 +1,14 @@
 const std = @import("std");
+const rtweekend = @import("rtweekend.zig");
 
 const fmt = std.fmt;
-const expect = @import("std").testing.expect;
+const expect = std.testing.expect;
+
+const RandGen = rtweekend.RandGen;
+const getRandom = rtweekend.getRandom;
+const getRandomInRange = rtweekend.getRandomInRange;
+
+var rnd = RandGen.init(0);
 
 pub fn debug_vec3(v: Vec3) void {
     std.debug.print("Vec3(x={d}, y={d}, z={d})\n", .{ v.x, v.y, v.z });
@@ -92,6 +99,44 @@ pub const Vec3 = struct {
         return "Vec3(" ++ "" ++ ")";
     }
 };
+
+pub fn random_on_hemisphere(normal: *Vec3) Vec3 {
+    const on_unit_sphere = random_unit_vector();
+    if (on_unit_sphere.dot(normal.*) > 0.0) {
+        return on_unit_sphere;
+    } else {
+        return on_unit_sphere.scalar(-1.0);
+    }
+}
+
+pub fn random_in_unit_sphere() Vec3 {
+    while (true) {
+        const p = random_in_range(-1.0, 1.0);
+        if (p.length_squared() < 1.0) {
+            return p;
+        }
+    }
+}
+
+pub fn random_unit_vector() Vec3 {
+    return random_in_unit_sphere().unit_vector();
+}
+
+pub fn random() Vec3 {
+    return .{
+        .x = getRandom(rnd),
+        .y = getRandom(rnd),
+        .z = getRandom(rnd),
+    };
+}
+
+pub fn random_in_range(min: f32, max: f32) Vec3 {
+    return .{
+        .x = getRandomInRange(&rnd, f32, min, max),
+        .y = getRandomInRange(&rnd, f32, min, max),
+        .z = getRandomInRange(&rnd, f32, min, max),
+    };
+}
 
 test "create null vector" {
     const v = Vec3.init(0.0, 0.0, 0.0);

@@ -64,7 +64,7 @@ pub const Camera = struct {
             for (0..self.image_width) |x| {
                 var pixel_color = Vec3.init(0, 0, 0);
                 for (0..self.samples_per_pixel) |_| {
-                    const r = self.get_ray(x, y);
+                    var r = self.get_ray(x, y);
                     pixel_color = pixel_color.add(r.color(world));
                 }
 
@@ -90,17 +90,5 @@ pub const Camera = struct {
         const px = getRandomInRange(&rnd, f32, -0.5, 0.5);
         const py = getRandomInRange(&rnd, f32, -0.5, 0.5);
         return self.pixel_delta_u.scalar(px).add(self.pixel_delta_v.scalar(py));
-    }
-
-    pub fn ray_color(r: *Ray, world: *Hittable) Vec3 {
-        var rec: HitRecord = undefined;
-
-        if (world.hit(r, Interval.init(0, Infinity), rec)) {
-            return Vec3.new(1, 1, 1).add(rec.normal).mul(0.5);
-        }
-
-        const unit_direction = r.direction.unit_vector();
-        const a = 0.5 * (unit_direction.y + 1.0);
-        return Vec3.new(1.0, 1.0, 1.0).mul(1.0 - a).add(Vec3.new(0.5, 0.7, 1.0).mul(a));
     }
 };
