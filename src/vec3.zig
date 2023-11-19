@@ -2,6 +2,7 @@ const std = @import("std");
 const rtweekend = @import("rtweekend.zig");
 
 const fmt = std.fmt;
+const math = std.math;
 const expect = std.testing.expect;
 
 const RandGen = rtweekend.RandGen;
@@ -80,6 +81,12 @@ pub const Vec3 = struct {
 
     pub fn length_squared(self: Self) f32 {
         return self.dot(self);
+    }
+
+    pub fn near_zero(self: *Self) bool {
+        // return true if the vector is close to zero in all dimensions.
+        const s = 1e-8;
+        return (@fabs(self.x) < s) and (@fabs(self.y) < s) and (@fabs(self.z) < s);
     }
 
     pub fn unit_vector(self: Self) Self {
@@ -256,4 +263,13 @@ test "element-wise multiplication of two vectors" {
     var expected = Vec3{ .x = 3.0, .y = 8.0, .z = 8.0 };
     var result = v1.mul(v2);
     try expect(result.is_equal(expected));
+}
+
+test "near zero" {
+    var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
+    var v2 = Vec3{ .x = 0.0, .y = 0.0, .z = 0.0 };
+    var v3 = Vec3{ .x = 1e-9, .y = -1e-9, .z = 0.0 };
+    try expect(!v1.near_zero());
+    try expect(v2.near_zero());
+    try expect(v3.near_zero());
 }

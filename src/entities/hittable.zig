@@ -3,6 +3,7 @@ const std = @import("std");
 const vec3 = @import("../vec3.zig");
 const Interval = @import("../interval.zig").Interval;
 const ray = @import("ray.zig");
+const Material = @import("material.zig").Material;
 const sphere = @import("sphere.zig");
 const hittableList = @import("hittableList.zig");
 
@@ -14,6 +15,7 @@ const HittableList = hittableList.HittableList;
 pub const HitRecord = struct {
     p: Vec3,
     normal: Vec3,
+    mat: ?*Material = null,
     t: f32,
     front_face: bool = false,
 
@@ -60,7 +62,7 @@ pub const Hittable = union(enum) {
     }
 
     pub fn sphere(center: Vec3, radius: f32) Self {
-        return Self{ .Sphere = Sphere.init(center, radius) };
+        return Self{ .Sphere = Sphere.init(center, radius, null) };
     }
 
     pub fn hittable_list(allocator: std.mem.Allocator) Self {
