@@ -5,6 +5,10 @@ const Interval = @import("interval.zig").Interval;
 
 const Vec3 = vec3.Vec3;
 
+pub fn linear_to_gamma(x: f32) f32 {
+    return @sqrt(x);
+}
+
 pub const PPMImage = struct {
     buffered_writer: std.io.BufferedWriter(4096, std.fs.File.Writer),
     out_fd: std.fs.File,
@@ -62,6 +66,10 @@ pub const PPMImage = struct {
         r *= scale;
         g *= scale;
         b *= scale;
+
+        r = linear_to_gamma(r);
+        g = linear_to_gamma(g);
+        b = linear_to_gamma(b);
 
         var intensity = Interval.init(0, 0.999);
 
