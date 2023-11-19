@@ -38,8 +38,7 @@ pub const Metal = struct {
     }
 
     pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
-        const r = r_in.direction.unit_vector();
-        const reflected = rec.normal.reflect(r);
+        const reflected = r_in.direction.unit_vector().reflect(rec.normal);
         scattered.* = Ray.init(rec.p, reflected);
         attenuation.* = self.albedo;
         return true;
