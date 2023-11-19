@@ -61,8 +61,8 @@ pub const Hittable = union(enum) {
         };
     }
 
-    pub fn sphere(center: Vec3, radius: f32, meterial: *Material) Self {
-        return Self{ .Sphere = Sphere.init(center, radius, meterial) };
+    pub fn sphere(center: Vec3, radius: f32, material: *Material) Self {
+        return Self{ .Sphere = Sphere.init(center, radius, material) };
     }
 
     pub fn hittable_list(allocator: std.mem.Allocator) Self {
