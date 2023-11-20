@@ -5,7 +5,7 @@ const ray = @import("ray.zig");
 const rtweekend = @import("../rtweekend.zig");
 
 const Vec3 = vec3.Vec3;
-const random_unit_vector = vec3.random_unit_vector;
+const randomUnitVector = vec3.randomUnitVector;
 const Ray = ray.Ray;
 const HitRecord = hittable.HitRecord;
 const getRandom = rtweekend.getRandom;
@@ -22,7 +22,7 @@ pub const Lambertian = struct {
 
     pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
         _ = r_in;
-        var scatter_direction = rec.normal.add(random_unit_vector());
+        var scatter_direction = rec.normal.add(randomUnitVector());
 
         if (scatter_direction.near_zero()) {
             scatter_direction = rec.normal;
@@ -45,7 +45,7 @@ pub const Metal = struct {
 
     pub fn scatter(self: *Self, r_in: *Ray, rec: *HitRecord, attenuation: *Vec3, scattered: *Ray) bool {
         const reflected = r_in.direction.unit_vector().reflect(rec.normal);
-        scattered.* = Ray.init(rec.p, reflected.add(random_unit_vector().scalar(self.fuzz)));
+        scattered.* = Ray.init(rec.p, reflected.add(randomUnitVector().scalar(self.fuzz)));
         attenuation.* = self.albedo;
         return scattered.direction.dot(rec.normal) > 0.0;
     }
