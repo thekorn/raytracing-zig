@@ -1,8 +1,6 @@
 const std = @import("std");
 const rtweekend = @import("../rtweekend.zig");
 
-const math = std.math;
-
 const Ray = @import("ray.zig").Ray;
 const hittable = @import("hittable.zig");
 const image = @import("../image.zig");
@@ -47,7 +45,7 @@ pub const Camera = struct {
 
         const focal_length = lookfrom.sub(lookat).length();
         const theta = degress_to_radians(vfov);
-        const h = math.tan(theta / 2.0);
+        const h = @tan(theta / 2.0);
         const viewport_height = 2.0 * h * focal_length;
         const viewport_width = aspect_ratio * viewport_height;
 
