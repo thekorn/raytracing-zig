@@ -36,10 +36,10 @@ pub const Lambertian = struct {
 
 pub const Metal = struct {
     albedo: Vec3,
-    fuzz: f32,
+    fuzz: f64,
     const Self = @This();
 
-    pub fn init(albedo: Vec3, f: f32) Self {
+    pub fn init(albedo: Vec3, f: f64) Self {
         return .{ .albedo = albedo, .fuzz = if (f < 1.0) f else 1.0 };
     }
 
@@ -52,10 +52,10 @@ pub const Metal = struct {
 };
 
 pub const Dielectric = struct {
-    ir: f32,
+    ir: f64,
     const Self = @This();
 
-    pub fn init(index_of_refraction: f32) Self {
+    pub fn init(index_of_refraction: f64) Self {
         return .{ .ir = index_of_refraction };
     }
 
@@ -71,7 +71,7 @@ pub const Dielectric = struct {
         const cannot_refract = refraction_ratio * sin_theta > 1.0;
         var direction: Vec3 = undefined;
 
-        if (cannot_refract or Self.reflectance(cos_theta, refraction_ratio) > getRandom(&rnd, f32)) {
+        if (cannot_refract or Self.reflectance(cos_theta, refraction_ratio) > getRandom(&rnd, f64)) {
             direction = unit_direction.reflect(rec.normal);
         } else {
             direction = unit_direction.refract(rec.normal, refraction_ratio);
@@ -81,11 +81,11 @@ pub const Dielectric = struct {
         return true;
     }
 
-    fn reflectance(cosine: f32, ref_idx: f32) f32 {
+    fn reflectance(cosine: f64, ref_idx: f64) f64 {
         // use Schlick's approximation for reflectance
         var r0 = (1 - ref_idx) / (1 + ref_idx);
         r0 = r0 * r0;
-        return r0 + (1 - r0) * math.pow(f32, (1 - cosine), 5);
+        return r0 + (1 - r0) * math.pow(f64, (1 - cosine), 5);
     }
 };
 
@@ -107,11 +107,11 @@ pub const Material = union(enum) {
         return Self{ .Lambertian = Lambertian.init(color) };
     }
 
-    pub fn metal(color: Vec3, fuzz: f32) Self {
+    pub fn metal(color: Vec3, fuzz: f64) Self {
         return Self{ .Metal = Metal.init(color, fuzz) };
     }
 
-    pub fn dielectric(index_of_refraction: f32) Self {
+    pub fn dielectric(index_of_refraction: f64) Self {
         return Self{ .Dielectric = Dielectric.init(index_of_refraction) };
     }
 };

@@ -16,12 +16,12 @@ pub const HitRecord = struct {
     p: Vec3,
     normal: Vec3,
     mat: Material,
-    t: f32,
+    t: f64,
     front_face: bool = false,
 
     const Self = @This();
 
-    pub fn init(p: Vec3, normal: Vec3, t: f32) Self {
+    pub fn init(p: Vec3, normal: Vec3, t: f64) Self {
         return .{ .p = p, .normal = normal, .t = t };
     }
 
@@ -61,7 +61,7 @@ pub const Hittable = union(enum) {
         };
     }
 
-    pub fn sphere(center: Vec3, radius: f32, material: *Material) Self {
+    pub fn sphere(center: Vec3, radius: f64, material: *Material) Self {
         return Self{ .Sphere = Sphere.init(center, radius, material) };
     }
 

@@ -21,7 +21,7 @@ pub const Ray = struct {
         return .{ .origin = origin, .direction = direction };
     }
 
-    pub fn at(self: Self, t: f32) Vec3 {
+    pub fn at(self: Self, t: f64) Vec3 {
         return self.origin.add(self.direction.scalar(t));
     }
 

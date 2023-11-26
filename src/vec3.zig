@@ -16,13 +16,13 @@ pub fn debug_vec3(v: Vec3) void {
 }
 
 pub const Vec3 = struct {
-    x: f32,
-    y: f32,
-    z: f32,
+    x: f64,
+    y: f64,
+    z: f64,
 
     const Self = @This();
 
-    pub fn init(x: f32, y: f32, z: f32) Self {
+    pub fn init(x: f64, y: f64, z: f64) Self {
         return .{
             .x = x,
             .y = y,
@@ -30,7 +30,7 @@ pub const Vec3 = struct {
         };
     }
 
-    pub fn scalar(self: Self, s: f32) Self {
+    pub fn scalar(self: Self, s: f64) Self {
         return Self.init(
             self.x * s,
             self.y * s,
@@ -38,7 +38,7 @@ pub const Vec3 = struct {
         );
     }
 
-    pub fn div(self: Self, x: f32) Self {
+    pub fn div(self: Self, x: f64) Self {
         const y = 1.0 / x;
         return self.scalar(y);
     }
@@ -55,7 +55,7 @@ pub const Vec3 = struct {
         return self.add(other.scalar(-1.0));
     }
 
-    pub fn dot(self: Self, other: Vec3) f32 {
+    pub fn dot(self: Self, other: Vec3) f64 {
         return self.x * other.x + self.y * other.y + self.z * other.z;
     }
 
@@ -75,11 +75,11 @@ pub const Vec3 = struct {
         );
     }
 
-    pub fn length(self: Self) f32 {
+    pub fn length(self: Self) f64 {
         return @sqrt(self.length_squared());
     }
 
-    pub fn length_squared(self: Self) f32 {
+    pub fn length_squared(self: Self) f64 {
         return self.dot(self);
     }
 
@@ -87,7 +87,7 @@ pub const Vec3 = struct {
         return self.sub(normal.scalar(2.0 * self.dot(normal)));
     }
 
-    pub fn refract(self: Self, normal: Vec3, etai_over_etat: f32) Self {
+    pub fn refract(self: Self, normal: Vec3, etai_over_etat: f64) Self {
         const cos_theta = @min(self.scalar(-1.0).dot(normal), 1.0);
         const r_out_perp = self.add(normal.scalar(cos_theta)).scalar(etai_over_etat);
         const r_out_parallel = normal.scalar(-@sqrt(@fabs(1.0 - r_out_perp.length_squared())));
@@ -148,11 +148,11 @@ pub fn random() Vec3 {
     );
 }
 
-pub fn randomInRange(min: f32, max: f32) Vec3 {
+pub fn randomInRange(min: f64, max: f64) Vec3 {
     return Vec3.init(
-        getRandomInRange(&rnd, f32, min, max),
-        getRandomInRange(&rnd, f32, min, max),
-        getRandomInRange(&rnd, f32, min, max),
+        getRandomInRange(&rnd, f64, min, max),
+        getRandomInRange(&rnd, f64, min, max),
+        getRandomInRange(&rnd, f64, min, max),
     );
 }
 

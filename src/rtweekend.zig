@@ -6,7 +6,7 @@ const pi = math.pi;
 
 pub const RandGen = std.rand.DefaultPrng;
 
-pub const Infinity = std.math.floatMax(f32);
+pub const Infinity = std.math.floatMax(f64);
 
 pub fn getRandom(rnd: *RandGen, comptime T: type) T {
     return switch (@typeInfo(T)) {
@@ -20,7 +20,7 @@ pub fn getRandomInRange(rnd: *RandGen, comptime T: type, min: T, max: T) T {
     return getRandom(rnd, T) * (max - min) + min;
 }
 
-pub fn degress_to_radians(degrees: f32) f32 {
+pub fn degress_to_radians(degrees: f64) f64 {
     return degrees * pi / 180.0;
 }
 
@@ -43,7 +43,7 @@ test "random" {
     var i: u32 = 0;
     var rnd = RandGen.init(0);
     while (i < 10) {
-        const a = getRandom(&rnd, f32);
+        const a = getRandom(&rnd, f64);
         try expect(a <= 1);
         try expect(a >= 0);
         i += 1;
@@ -54,7 +54,7 @@ test "randomInRange" {
     var i: u32 = 0;
     var rnd = RandGen.init(0);
     while (i < 10) {
-        const a = getRandomInRange(&rnd, f32, -2, -1);
+        const a = getRandomInRange(&rnd, f64, -2, -1);
         try expect(a <= -1);
         try expect(a >= -2);
         i += 1;
