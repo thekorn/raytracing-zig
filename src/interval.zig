@@ -57,7 +57,7 @@ test "interval [0, 10] sourrounds" {
 }
 
 test "get default interval" {
-    var interval = Interval.defaultInit();
+    const interval = Interval.defaultInit();
     try expect(interval.min == -Infinity);
     try expect(interval.min < 0);
     try expect(interval.max == Infinity);

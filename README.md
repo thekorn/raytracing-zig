@@ -1,6 +1,10 @@
 # Raytracing in one Weekend in Zig
 
-Read the book at: 
+## requirements
+
+- Zig >= 0.12.0
+
+Read the book at:
 https://raytracing.github.io/books/RayTracingInOneWeekend.html
 
 ## render the scene
@@ -24,7 +28,7 @@ $ docker run -v $(pwd):/imgs dpokidov/imagemagick /imgs/out.ppm /imgs/current.pn
 ## build options
 
 ```bash
-$ zig build -Doptimize=ReleaseFast 
+$ zig build -Doptimize=ReleaseFast
 $ zig build -Doptimize=ReleaseSmall
 ```
 
@@ -43,6 +47,6 @@ Benchmark 1: ./zig-out/bin/raytracing-zig
 ![curret rendering](./current.png)
 
 ## References
- 
- * https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
- * https://github.com/jpaquim/raytracing-zig
+
+- https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
+- https://github.com/jpaquim/raytracing-zig
