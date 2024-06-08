@@ -3,8 +3,8 @@ let
 in
   unstable.mkShell {
     buildInputs = [
-      unstable.zig
-      unstable.zls
+      #unstable.zig
+      #unstable.zls
       unstable.hyperfine
     ];
   }

@@ -2,7 +2,7 @@
 
 ## requirements
 
-- Zig >= 0.12.0
+- Zig >= 0.13.0
 
 Read the book at:
 https://raytracing.github.io/books/RayTracingInOneWeekend.html
