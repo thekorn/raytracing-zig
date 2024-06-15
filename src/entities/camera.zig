@@ -1,8 +1,6 @@
 const std = @import("std");
 const rtweekend = @import("../rtweekend.zig");
 
-const math = std.math;
-
 const Ray = @import("ray.zig").Ray;
 const hittable = @import("hittable.zig");
 const image = @import("../image.zig");
@@ -30,7 +28,7 @@ pub const Camera = struct {
     pixel_delta_v: Vec3,
     samples_per_pixel: usize,
     max_depth: usize,
-    vfov: f32,
+    vfov: f64,
     lookfrom: Vec3,
     lookat: Vec3,
     vup: Vec3,
@@ -40,14 +38,14 @@ pub const Camera = struct {
 
     const Self = @This();
 
-    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize, max_depth: usize, vfov: f32, lookfrom: Vec3, lookat: Vec3, vup: Vec3) Self {
-        const aspect_ratio = @as(f32, @floatFromInt(image_width)) / @as(f32, @floatFromInt(image_height));
+    pub fn init(image_width: usize, image_height: usize, samples_per_pixel: usize, max_depth: usize, vfov: f64, lookfrom: Vec3, lookat: Vec3, vup: Vec3) Self {
+        const aspect_ratio = @as(f64, @floatFromInt(image_width)) / @as(f64, @floatFromInt(image_height));
 
         const center = lookfrom;
 
         const focal_length = lookfrom.sub(lookat).length();
         const theta = degress_to_radians(vfov);
-        const h = math.tan(theta / 2.0);
+        const h = @tan(theta / 2.0);
         const viewport_height = 2.0 * h * focal_length;
         const viewport_width = aspect_ratio * viewport_height;
 
@@ -59,8 +57,8 @@ pub const Camera = struct {
         const viewport_u = u.scalar(viewport_width);
         const viewport_v = v.scalar(-1).scalar(viewport_height);
 
-        const pixel_delta_u = viewport_u.div(@as(f32, @floatFromInt(image_width)));
-        const pixel_delta_v = viewport_v.div(@as(f32, @floatFromInt(image_height)));
+        const pixel_delta_u = viewport_u.div(@as(f64, @floatFromInt(image_width)));
+        const pixel_delta_v = viewport_v.div(@as(f64, @floatFromInt(image_height)));
 
         const viewport_upper_left = center.sub(w.scalar(focal_length)).sub(viewport_u.div(2)).sub(viewport_v.div(2));
         const pixel00_loc = viewport_upper_left.add(pixel_delta_u.add(pixel_delta_v).div(2));
@@ -101,8 +99,8 @@ pub const Camera = struct {
 
     pub fn get_ray(self: *Self, x: usize, y: usize) Ray {
         const pixel_center = self.pixel00_loc
-            .add(self.pixel_delta_u.scalar(@as(f32, @floatFromInt(x))))
-            .sub(self.pixel_delta_v.scalar(@as(f32, @floatFromInt(y))));
+            .add(self.pixel_delta_u.scalar(@as(f64, @floatFromInt(x))))
+            .sub(self.pixel_delta_v.scalar(@as(f64, @floatFromInt(y))));
 
         const pixel_sample = pixel_center.add(self.pixel_sample_square());
 
@@ -113,8 +111,8 @@ pub const Camera = struct {
     }
 
     pub fn pixel_sample_square(self: *Self) Vec3 {
-        const px = getRandomInRange(&rnd, f32, -0.5, 0.5);
-        const py = getRandomInRange(&rnd, f32, -0.5, 0.5);
+        const px = getRandomInRange(&rnd, f64, -0.5, 0.5);
+        const py = getRandomInRange(&rnd, f64, -0.5, 0.5);
         return self.pixel_delta_u.scalar(px).add(self.pixel_delta_v.scalar(py));
     }
 };

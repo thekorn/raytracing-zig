@@ -23,7 +23,7 @@ pub fn main() !void {
     const image_width = 400;
 
     // Calculate the image height, and ensure that it's at least 1.
-    var image_height = @as(usize, @intFromFloat(@as(f32, image_width) / aspect_ratio));
+    var image_height = @as(usize, @intFromFloat(@as(f64, image_width) / aspect_ratio));
     if (image_height < 1) image_height = 1;
 
     var img = try image.makePPMImageFile("out.ppm", image_width, image_height);

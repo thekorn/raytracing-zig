@@ -5,7 +5,7 @@ https://raytracing.github.io/books/RayTracingInOneWeekend.html
 
 ## requirements
 
-* Zig >= 0.13.0
+- Zig >= 0.13.0
 
 ## render the scene
 
@@ -48,5 +48,10 @@ Benchmark 1: ./zig-out/bin/raytracing-zig
 
 ## References
 
+<<<<<<< HEAD
  * https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
  * https://github.com/jpaquim/raytracing-zig
+=======
+- https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
+- https://github.com/jpaquim/raytracing-zig
+>>>>>>> 37aaba85ba81eb541b0da8626a0e963d6a1f2f3f

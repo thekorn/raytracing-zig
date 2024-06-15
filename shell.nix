@@ -3,8 +3,9 @@ let
 in
   unstable.mkShell {
     buildInputs = [
-      unstable.zig
-      unstable.zls
+      # zig is broken in nix, also 0.13.0 is not available in nixpkgs yet
+      #unstable.zig
+      #unstable.zls
       unstable.hyperfine
     ];
   }
