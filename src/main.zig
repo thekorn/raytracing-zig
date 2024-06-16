@@ -23,7 +23,7 @@ pub fn main() !void {
     const image_width = 400;
 
     // Calculate the image height, and ensure that it's at least 1.
-    var image_height = @as(usize, @intFromFloat(@as(f64, image_width) / aspect_ratio));
+    var image_height = @as(usize, @intFromFloat(@as(f32, image_width) / aspect_ratio));
     if (image_height < 1) image_height = 1;
 
     var img = try image.makePPMImageFile("out.ppm", image_width, image_height);
@@ -37,13 +37,14 @@ pub fn main() !void {
     var material_ground = Material.lambertian(Vec3.init(0.8, 0.8, 0));
     var material_center = Material.lambertian(Vec3.init(0.1, 0.2, 0.5));
     var material_left = Material.dielectric(1.5);
-    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2), 0);
+    var material_bubble = Material.dielectric(1.0 / 1.5);
+    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2), 1.0);
 
-    try world.add(Hittable.sphere(Vec3.init(0, -100.5, -1), 100, &material_ground));
-    try world.add(Hittable.sphere(Vec3.init(0, 0, -1), 0.5, &material_center));
-    try world.add(Hittable.sphere(Vec3.init(-1, 0, -1), 0.5, &material_left));
-    try world.add(Hittable.sphere(Vec3.init(-1, 0, -1), -0.4, &material_left));
-    try world.add(Hittable.sphere(Vec3.init(1, 0, -1), 0.5, &material_right));
+    try world.add(Hittable.sphere(Vec3.init(0.0, -100.5, -1.0), 100.0, &material_ground));
+    try world.add(Hittable.sphere(Vec3.init(-1.0, 0.0, -1.0), 0.5, &material_left));
+    try world.add(Hittable.sphere(Vec3.init(0.0, 0.0, -1.2), 0.5, &material_center));
+    try world.add(Hittable.sphere(Vec3.init(-1.0, 0.0, -1.0), 0.4, &material_bubble));
+    try world.add(Hittable.sphere(Vec3.init(1.0, 0.0, -1.0), 0.5, &material_right));
 
     // Camera
     var cam = Camera.init(
@@ -51,7 +52,7 @@ pub fn main() !void {
         image_height,
         100,
         50,
-        90,
+        10,
         Vec3.init(-2, 2, 1),
         Vec3.init(0, 0, -1),
         Vec3.init(0, 1, 0),

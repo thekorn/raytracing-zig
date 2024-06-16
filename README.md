@@ -48,5 +48,5 @@ Benchmark 1: ./zig-out/bin/raytracing-zig
 
 ## References
 
-- https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
-- https://github.com/jpaquim/raytracing-zig
+ * https://github.com/ryoppippi/Ray-Tracing-in-One-Weekend.zig
+ * https://github.com/jpaquim/raytracing-zig

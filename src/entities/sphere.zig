@@ -10,12 +10,12 @@ const HitRecord = hitable.HitRecord;
 
 pub const Sphere = struct {
     center: Vec3,
-    radius: f64,
+    radius: f32,
     mat: *Material,
 
     const Self = @This();
 
-    pub fn init(center: Vec3, radius: f64, material: *Material) Self {
+    pub fn init(center: Vec3, radius: f32, material: *Material) Self {
         return .{ .center = center, .radius = radius, .mat = material };
     }
 

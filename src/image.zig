@@ -4,9 +4,8 @@ const vec3 = @import("vec3.zig");
 const Interval = @import("interval.zig").Interval;
 
 const Vec3 = vec3.Vec3;
-const Color = vec3.Color;
 
-pub fn linear_to_gamma(x: f64) f64 {
+pub fn linear_to_gamma(x: f32) f32 {
     return @sqrt(x);
 }
 
@@ -58,12 +57,12 @@ pub const PPMImage = struct {
     /// These values are scaled to the range 0-255 and converted to integers to write to the file.
     /// @param self: The PPMImage instance to write the color to.
     /// @param c: The color to write, represented as a Vec3.
-    pub fn write_color(self: *Self, c: Color, samples_per_pixel: usize) void {
+    pub fn write_color(self: *Self, c: Vec3, samples_per_pixel: usize) void {
         var r = c.x;
         var g = c.y;
         var b = c.z;
 
-        const scale = 1.0 / @as(f64, @floatFromInt(samples_per_pixel));
+        const scale = 1.0 / @as(f32, @floatFromInt(samples_per_pixel));
         r *= scale;
         g *= scale;
         b *= scale;
