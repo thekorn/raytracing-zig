@@ -34,14 +34,28 @@ pub fn main() !void {
     var world = Hittable.hittable_list(allocator);
     defer world.deinit();
 
-    const R = math.cos(math.pi / 4.0);
-    var material_left = Material.lambertian(Vec3.init(0, 0, 1));
-    var material_right = Material.lambertian(Vec3.init(1, 0, 0));
+    var material_ground = Material.lambertian(Vec3.init(0.8, 0.8, 0));
+    var material_center = Material.lambertian(Vec3.init(0.1, 0.2, 0.5));
+    var material_left = Material.dielectric(1.5);
+    var material_bubble = Material.dielectric(1.0 / 1.5);
+    var material_right = Material.metal(Vec3.init(0.8, 0.6, 0.2), 1.0);
 
-    try world.add(Hittable.sphere(Vec3.init(-R, 0, -1), R, &material_left));
-    try world.add(Hittable.sphere(Vec3.init(R, 0, -1), R, &material_right));
+    try world.add(Hittable.sphere(Vec3.init(0.0, -100.5, -1.0), 100.0, &material_ground));
+    try world.add(Hittable.sphere(Vec3.init(-1.0, 0.0, -1.0), 0.5, &material_left));
+    try world.add(Hittable.sphere(Vec3.init(0.0, 0.0, -1.2), 0.5, &material_center));
+    try world.add(Hittable.sphere(Vec3.init(-1.0, 0.0, -1.0), 0.4, &material_bubble));
+    try world.add(Hittable.sphere(Vec3.init(1.0, 0.0, -1.0), 0.5, &material_right));
 
     // Camera
-    var cam = Camera.init(image_width, image_height, 100, 50, 90);
+    var cam = Camera.init(
+        image_width,
+        image_height,
+        100,
+        50,
+        10,
+        Vec3.init(-2, 2, 1),
+        Vec3.init(0, 0, -1),
+        Vec3.init(0, 1, 0),
+    );
     cam.render(&img, &world);
 }
