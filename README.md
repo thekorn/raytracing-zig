@@ -22,7 +22,8 @@ $ zig build test --summary all
 ## convert the result to png
 
 ```bash
-$ docker run -v $(pwd):/imgs dpokidov/imagemagick /imgs/out.ppm /imgs/current.png
+$ docker run -v $(pwd):/imgs \
+    dpokidov/imagemagick /imgs/out.ppm /imgs/current.png
 ```
 
 ## build options
