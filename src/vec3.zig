@@ -16,26 +16,19 @@ pub fn debug_vec3(v: Vec3) void {
 }
 
 pub const Vec3 = struct {
-    x: f32,
-    y: f32,
-    z: f32,
+    data: @Vector(3, f32),
 
     const Self = @This();
 
     pub fn init(x: f32, y: f32, z: f32) Self {
         return .{
-            .x = x,
-            .y = y,
-            .z = z,
+            .data = @Vector(3, f32)(x, y, z),
         };
     }
 
     pub fn scalar(self: Self, s: f32) Self {
-        return .{
-            .x = self.x * s,
-            .y = self.y * s,
-            .z = self.z * s,
-        };
+        const m: @Vector(3, f32) = @splat(s);
+        return .{ .data = self.data * m };
     }
 
     pub fn div(self: Self, x: f32) Self {
@@ -45,9 +38,7 @@ pub const Vec3 = struct {
 
     pub fn add(self: Self, other: Vec3) Self {
         return .{
-            .x = self.x + other.x,
-            .y = self.y + other.y,
-            .z = self.z + other.z,
+            .data = self.data + other.data,
         };
     }
 
@@ -56,14 +47,15 @@ pub const Vec3 = struct {
     }
 
     pub fn dot(self: Self, other: Vec3) f32 {
-        return self.x * other.x + self.y * other.y + self.z * other.z;
+        const s = self.mul(other);
+        return .{
+            .data = @reduce(.Add, s),
+        };
     }
 
     pub fn mul(self: Self, other: Vec3) Self {
         return .{
-            .x = self.x * other.x,
-            .y = self.y * other.y,
-            .z = self.z * other.z,
+            .data = self.data * other.data,
         };
     }
 
