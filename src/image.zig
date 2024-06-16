@@ -21,7 +21,7 @@ pub const PPMImage = struct {
     pub fn init(fd: std.fs.File) Self {
         const writer = fd.writer();
 
-        var bw = std.io.bufferedWriter(writer);
+        const bw = std.io.bufferedWriter(writer);
         return .{ .buffered_writer = bw, .out_fd = fd };
     }
 

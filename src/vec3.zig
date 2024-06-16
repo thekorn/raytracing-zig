@@ -90,14 +90,14 @@ pub const Vec3 = struct {
     pub fn refract(self: Self, normal: Vec3, etai_over_etat: f32) Self {
         const cos_theta = @min(self.scalar(-1.0).dot(normal), 1.0);
         const r_out_perp = self.add(normal.scalar(cos_theta)).scalar(etai_over_etat);
-        const r_out_parallel = normal.scalar(-@sqrt(@fabs(1.0 - r_out_perp.length_squared())));
+        const r_out_parallel = normal.scalar(-@sqrt(@abs(1.0 - r_out_perp.length_squared())));
         return r_out_perp.add(r_out_parallel);
     }
 
     pub fn near_zero(self: *Self) bool {
         // return true if the vector is close to zero in all dimensions.
         const s = 1e-8;
-        return (@fabs(self.x) < s) and (@fabs(self.y) < s) and (@fabs(self.z) < s);
+        return (@abs(self.x) < s) and (@abs(self.y) < s) and (@abs(self.z) < s);
     }
 
     pub fn unit_vector(self: Self) Self {
@@ -193,8 +193,8 @@ test "vec3 is equal" {
 
 test "cross product of two vectors" {
     var a = Vec3{ .x = 1.0, .y = 2.0, .z = 3.0 };
-    var b = Vec3{ .x = 4.0, .y = 5.0, .z = 6.0 };
-    var expected = Vec3{ .x = -3.0, .y = 6.0, .z = -3.0 };
+    const b = Vec3{ .x = 4.0, .y = 5.0, .z = 6.0 };
+    const expected = Vec3{ .x = -3.0, .y = 6.0, .z = -3.0 };
     var result = a.cross(b);
     try expect(result.is_equal(expected));
 }
@@ -202,28 +202,28 @@ test "cross product of two vectors" {
 test "length of a vector" {
     var v = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
     const expected = 3.0;
-    var result = v.length();
+    const result = v.length();
     try expect(result == expected);
 }
 
 test "squared length of a vector" {
     var v = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
     const expected = 9.0;
-    var result = v.length_squared();
+    const result = v.length_squared();
     try expect(result == expected);
 }
 
 test "unit vector of a vector" {
     var v = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
-    var expected = Vec3{ .x = 1.0 / 3.0, .y = 2.0 / 3.0, .z = 2.0 / 3.0 };
+    const expected = Vec3{ .x = 1.0 / 3.0, .y = 2.0 / 3.0, .z = 2.0 / 3.0 };
     var result = v.unit_vector();
     try expect(result.is_equal(expected));
 }
 
 test "equality of two vectors" {
     var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 3.0 };
-    var v2 = Vec3{ .x = 1.0, .y = 2.0, .z = 3.0 };
-    var v3 = Vec3{ .x = 4.0, .y = 5.0, .z = 6.0 };
+    const v2 = Vec3{ .x = 1.0, .y = 2.0, .z = 3.0 };
+    const v3 = Vec3{ .x = 4.0, .y = 5.0, .z = 6.0 };
     try expect(v1.is_equal(v2));
     try expect(!v1.is_equal(v3));
 }
@@ -231,7 +231,7 @@ test "equality of two vectors" {
 test "scalar multiplication of a vector" {
     var v = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
     const s = 3.0;
-    var expected = Vec3{ .x = 3.0, .y = 6.0, .z = 6.0 };
+    const expected = Vec3{ .x = 3.0, .y = 6.0, .z = 6.0 };
     var result = v.scalar(s);
     try expect(result.is_equal(expected));
 }
@@ -239,39 +239,39 @@ test "scalar multiplication of a vector" {
 test "division of a vector by a scalar" {
     var v = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
     const x = 2.0;
-    var expected = Vec3{ .x = 0.5, .y = 1.0, .z = 1.0 };
+    const expected = Vec3{ .x = 0.5, .y = 1.0, .z = 1.0 };
     var result = v.div(x);
     try expect(result.is_equal(expected));
 }
 
 test "addition of two vectors" {
     var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
-    var v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
-    var expected = Vec3{ .x = 4.0, .y = 6.0, .z = 6.0 };
+    const v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
+    const expected = Vec3{ .x = 4.0, .y = 6.0, .z = 6.0 };
     var result = v1.add(v2);
     try expect(result.is_equal(expected));
 }
 
 test "subtraction of two vectors" {
     var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
-    var v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
-    var expected = Vec3{ .x = -2.0, .y = -2.0, .z = -2.0 };
+    const v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
+    const expected = Vec3{ .x = -2.0, .y = -2.0, .z = -2.0 };
     var result = v1.sub(v2);
     try expect(result.is_equal(expected));
 }
 
 test "dot product of two vectors" {
     var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
-    var v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
+    const v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
     const expected = 19.0;
-    var result = v1.dot(v2);
+    const result = v1.dot(v2);
     try expect(result == expected);
 }
 
 test "element-wise multiplication of two vectors" {
     var v1 = Vec3{ .x = 1.0, .y = 2.0, .z = 2.0 };
-    var v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
-    var expected = Vec3{ .x = 3.0, .y = 8.0, .z = 8.0 };
+    const v2 = Vec3{ .x = 3.0, .y = 4.0, .z = 4.0 };
+    const expected = Vec3{ .x = 3.0, .y = 8.0, .z = 8.0 };
     var result = v1.mul(v2);
     try expect(result.is_equal(expected));
 }
