@@ -1,11 +1,18 @@
+with import <nixpkgs> {};
+
 let
-  unstable = import (fetchTarball "https://nixos.org/channels/nixpkgs-unstable/nixexprs.tar.xz") {};
+  unstable = import
+    (builtins.fetchTarball https://nixos.org/channels/nixos-unstable/nixexprs.tar.xz)
+    # reuse the current configuration
+    { config = config; };
 in
-  unstable.mkShell {
-    buildInputs = [
-      # zig is broken in nix, also 0.13.0 is not available in nixpkgs yet
-      #unstable.zig
-      #unstable.zls
-      unstable.hyperfine
+pkgs.mkShell {
+    buildInputs = with pkgs; [
+
     ];
-  }
+  nativeBuildInputs = with pkgs; [
+    unstable.zig_0_13
+    unstable.zls
+    hyperfine
+  ];
+}
